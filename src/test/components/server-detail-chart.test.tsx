@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -135,18 +135,18 @@ function renderWithQuery(ui: React.ReactElement) {
 	);
 }
 
-function seedWebSocketData() {
+function seedWebSocketData(gpuNames = ["NVIDIA T4"]) {
 	const baseNow = Date.parse("2025-01-01T00:00:20.000Z");
 	const server = createServer({
 		id: 7,
 		name: "edge-chart-detail",
 		host: {
-			gpu: ["NVIDIA T4"],
+			gpu: gpuNames,
 		},
 		state: {
 			cpu: 45,
 			disk_used: 180,
-			gpu: [33],
+			gpu: gpuNames.map((_, index) => 33 + index),
 			mem_used: 80,
 			net_in_speed: 4 * 1024 ** 2,
 			net_out_speed: 3 * 1024 ** 2,
@@ -164,12 +164,12 @@ function seedWebSocketData() {
 			createServer({
 				id: 7,
 				host: {
-					gpu: ["NVIDIA T4"],
+					gpu: gpuNames,
 				},
 				state: {
 					cpu: 30 + index,
 					disk_used: 100 + index * 10,
-					gpu: [20 + index],
+					gpu: gpuNames.map((_, gpuIndex) => 20 + index + gpuIndex),
 					mem_used: 50 + index * 5,
 					net_in_speed: (1 + index) * 1024 ** 2,
 					net_out_speed: (2 + index) * 1024 ** 2,
@@ -201,7 +201,62 @@ describe("ServerDetailChart", () => {
 
 		const { container } = renderWithQuery(<ServerDetailChart server_id="7" />);
 
-		expect(container.querySelectorAll(".h-\\[182px\\]")).toHaveLength(6);
+		const grid = container.querySelector(".grid");
+		expect(grid).toHaveClass("grid-cols-1", "md:grid-cols-2", "gap-3");
+		expect(grid).not.toHaveClass("lg:grid-cols-3");
+		expect(grid?.children).toHaveLength(6);
+		for (const skeleton of Array.from(grid?.children ?? [])) {
+			expect(skeleton).toHaveClass(
+				"h-[252px]",
+				"md:h-[292px]",
+				"w-full",
+				"min-w-0",
+			);
+		}
+	});
+
+	it.each([
+		{ label: "without GPUs", gpuNames: [], chartCount: 6 },
+		{ label: "with one GPU", gpuNames: ["NVIDIA T4"], chartCount: 7 },
+		{
+			label: "with multiple GPUs",
+			gpuNames: ["NVIDIA T4", "NVIDIA A10"],
+			chartCount: 8,
+		},
+	])("uses the same enlarged responsive layout $label", async ({
+		gpuNames,
+		chartCount,
+	}) => {
+		seedWebSocketData(gpuNames);
+
+		const { container } = renderWithQuery(<ServerDetailChart server_id="7" />);
+		await screen.findByText("serverDetailChart.realtime");
+
+		const grid = container.querySelector(".server-charts");
+		expect(grid).toHaveClass("grid-cols-1", "md:grid-cols-2", "gap-3");
+		expect(grid).not.toHaveClass("lg:grid-cols-3");
+		expect(grid?.children).toHaveLength(chartCount);
+		for (const card of Array.from(grid?.children ?? [])) {
+			expect(card).toHaveClass("min-w-0");
+		}
+
+		const charts = container.querySelectorAll("[data-chart]");
+		expect(charts).toHaveLength(chartCount);
+		for (const chart of charts) {
+			expect(chart).toHaveClass(
+				"aspect-auto",
+				"h-[200px]",
+				"md:h-[240px]",
+				"w-full",
+				"min-w-0",
+			);
+		}
+		for (const gpuName of gpuNames) {
+			expect(screen.getByText(`GPU: ${gpuName}`)).toBeInTheDocument();
+		}
+		if (gpuNames.length === 0) {
+			expect(screen.queryByText(/^GPU/)).not.toBeInTheDocument();
+		}
 	});
 
 	it("renders realtime resource, network, connection, and GPU charts", async () => {
@@ -283,6 +338,53 @@ describe("ServerDetailChart", () => {
 					"1d",
 				);
 			});
+		}
+	});
+
+	it("preserves enlarged containers while loading history and returning to realtime", async () => {
+		const user = userEvent.setup();
+		seedWebSocketData();
+		const pendingMetrics: Array<() => void> = [];
+		detailChartMocks.fetchServerMetrics.mockImplementation(
+			(_serverId: number, metric: string) =>
+				new Promise((resolve) => {
+					pendingMetrics.push(() => resolve(metricsResponse(metric)));
+				}),
+		);
+		const { container } = renderWithQuery(<ServerDetailChart server_id="7" />);
+
+		await screen.findByText("serverDetailChart.realtime");
+		await user.click(screen.getByText("serverDetailChart.period30d"));
+
+		const charts = container.querySelectorAll("[data-chart]");
+		expect(charts).toHaveLength(7);
+		for (const chart of charts) {
+			expect(chart).toHaveClass("h-[200px]", "md:h-[240px]");
+			const placeholder = chart.querySelector(".h-full.w-full");
+			expect(placeholder).toBeInTheDocument();
+			expect(placeholder).toHaveStyle({ width: "100%", height: "100%" });
+		}
+
+		await act(async () => {
+			for (const resolveMetric of pendingMetrics) {
+				resolveMetric();
+			}
+		});
+		await waitFor(() => {
+			expect(screen.getAllByTestId("responsive-chart")).toHaveLength(7);
+		});
+		expect(detailChartMocks.fetchServerMetrics).toHaveBeenCalledWith(
+			7,
+			"cpu",
+			"30d",
+		);
+
+		detailChartMocks.fetchServerMetrics.mockClear();
+		await user.click(screen.getByText("serverDetailChart.realtime"));
+		expect(screen.getAllByTestId("responsive-chart")).toHaveLength(7);
+		expect(detailChartMocks.fetchServerMetrics).not.toHaveBeenCalled();
+		for (const chart of container.querySelectorAll("[data-chart]")) {
+			expect(chart).toHaveClass("h-[200px]", "md:h-[240px]");
 		}
 	});
 });

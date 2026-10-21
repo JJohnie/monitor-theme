@@ -84,6 +84,8 @@ type connectChartData = {
 };
 
 const MIN_HISTORY_LOADING_MS = 300;
+const RESOURCE_CHART_CLASS_NAME =
+	"aspect-auto h-[200px] md:h-[240px] w-full min-w-0";
 const sleep = (ms: number) =>
 	new Promise<void>((resolve) => {
 		setTimeout(resolve, ms);
@@ -239,7 +241,7 @@ export default function ServerDetailChart({
 				onPeriodChange={setSelectedPeriod}
 				isTsdbEnabled={isTsdbEnabled}
 			/>
-			<section className="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-3 server-charts">
+			<section className="grid grid-cols-1 md:grid-cols-2 gap-3 server-charts">
 				<CpuChart
 					now={nezhaWsData.now}
 					data={server}
@@ -482,7 +484,7 @@ function GpuChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -516,7 +518,7 @@ function GpuChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isLoading ? (
 							<ChartSkeleton />
@@ -686,7 +688,7 @@ function CpuChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -709,7 +711,7 @@ function CpuChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isLoading ? (
 							<ChartSkeleton />
@@ -888,7 +890,7 @@ function ProcessChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -904,7 +906,7 @@ function ProcessChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isLoading ? (
 							<ChartSkeleton />
@@ -1148,7 +1150,7 @@ function MemChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -1206,7 +1208,7 @@ function MemChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isMemLoading ? (
 							<ChartSkeleton />
@@ -1404,7 +1406,7 @@ function DiskChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -1433,7 +1435,7 @@ function DiskChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isLoading ? (
 							<ChartSkeleton />
@@ -1681,7 +1683,7 @@ function NetworkChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -1723,7 +1725,7 @@ function NetworkChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isNetworkLoading ? (
 							<ChartSkeleton />
@@ -1977,7 +1979,7 @@ function ConnectChart({
 
 	return (
 		<Card
-			className={cn({
+			className={cn("min-w-0", {
 				"bg-card/70": customBackgroundImage,
 			})}
 		>
@@ -2003,7 +2005,7 @@ function ConnectChart({
 					</div>
 					<ChartContainer
 						config={chartConfig}
-						className="aspect-auto h-[130px] w-full"
+						className={RESOURCE_CHART_CLASS_NAME}
 					>
 						{isConnectLoading ? (
 							<ChartSkeleton />

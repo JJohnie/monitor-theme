@@ -3,16 +3,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { BackIcon } from "../Icon";
 
+const RESOURCE_CHART_SKELETON_CLASS_NAME =
+	"h-[252px] md:h-[292px] w-full min-w-0 rounded-[5px] bg-muted-foreground/10 animate-none";
+
 export function ServerDetailChartLoading() {
 	return (
 		<div>
-			<section className="grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-3">
-				<Skeleton className="h-[182px] w-full rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
-				<Skeleton className="h-[182px] w-full rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
-				<Skeleton className="h-[182px] w-full rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
-				<Skeleton className="h-[182px] w-full rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
-				<Skeleton className="h-[182px] w-full rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
-				<Skeleton className="h-[182px] w-full rounded-[5px] bg-muted-foreground/10 animate-none"></Skeleton>
+			<section className="grid grid-cols-1 md:grid-cols-2 gap-3">
+				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
+				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
+				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
+				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
+				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
+				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
 			</section>
 		</div>
 	);
