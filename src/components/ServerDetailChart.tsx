@@ -85,7 +85,7 @@ type connectChartData = {
 
 const MIN_HISTORY_LOADING_MS = 300;
 const RESOURCE_CHART_CLASS_NAME =
-	"aspect-auto h-[260px] md:h-[360px] w-full min-w-0";
+	"aspect-auto h-[220px] md:h-[300px] w-full min-w-0";
 const sleep = (ms: number) =>
 	new Promise<void>((resolve) => {
 		setTimeout(resolve, ms);

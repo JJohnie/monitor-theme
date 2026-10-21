@@ -211,8 +211,8 @@ describe("ServerDetailChart", () => {
 		expect(grid?.children).toHaveLength(6);
 		for (const skeleton of Array.from(grid?.children ?? [])) {
 			expect(skeleton).toHaveClass(
-				"h-[312px]",
-				"md:h-[412px]",
+				"h-[272px]",
+				"md:h-[352px]",
 				"w-full",
 				"min-w-0",
 			);
@@ -253,8 +253,8 @@ describe("ServerDetailChart", () => {
 		for (const chart of charts) {
 			expect(chart).toHaveClass(
 				"aspect-auto",
-				"h-[260px]",
-				"md:h-[360px]",
+				"h-[220px]",
+				"md:h-[300px]",
 				"w-full",
 				"min-w-0",
 			);
@@ -367,7 +367,7 @@ describe("ServerDetailChart", () => {
 		const charts = container.querySelectorAll("[data-chart]");
 		expect(charts).toHaveLength(7);
 		for (const chart of charts) {
-			expect(chart).toHaveClass("h-[260px]", "md:h-[360px]");
+			expect(chart).toHaveClass("h-[220px]", "md:h-[300px]");
 			const placeholder = chart.querySelector(".h-full.w-full");
 			expect(placeholder).toBeInTheDocument();
 			expect(placeholder).toHaveStyle({ width: "100%", height: "100%" });
@@ -392,7 +392,7 @@ describe("ServerDetailChart", () => {
 		expect(screen.getAllByTestId("responsive-chart")).toHaveLength(7);
 		expect(detailChartMocks.fetchServerMetrics).not.toHaveBeenCalled();
 		for (const chart of container.querySelectorAll("[data-chart]")) {
-			expect(chart).toHaveClass("h-[260px]", "md:h-[360px]");
+			expect(chart).toHaveClass("h-[220px]", "md:h-[300px]");
 		}
 	});
 });
