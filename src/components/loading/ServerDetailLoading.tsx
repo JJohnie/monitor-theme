@@ -4,12 +4,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BackIcon } from "../Icon";
 
 const RESOURCE_CHART_SKELETON_CLASS_NAME =
-	"h-[252px] md:h-[292px] w-full min-w-0 rounded-[5px] bg-muted-foreground/10 animate-none";
+	"h-[312px] md:h-[412px] w-full min-w-0 rounded-[5px] bg-muted-foreground/10 animate-none";
 
 export function ServerDetailChartLoading() {
 	return (
 		<div>
-			<section className="grid grid-cols-1 md:grid-cols-2 gap-3">
+			<section className="grid grid-cols-1 gap-3">
 				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
 				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>
 				<Skeleton className={RESOURCE_CHART_SKELETON_CLASS_NAME}></Skeleton>

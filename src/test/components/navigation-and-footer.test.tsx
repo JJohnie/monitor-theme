@@ -136,10 +136,10 @@ describe("server detail loading states", () => {
 	it("renders chart skeleton cards", () => {
 		const { container } = render(<ServerDetailChartLoading />);
 
-		const skeletons = container.querySelectorAll(".h-\\[252px\\]");
+		const skeletons = container.querySelectorAll(".h-\\[312px\\]");
 		expect(skeletons).toHaveLength(6);
 		for (const skeleton of skeletons) {
-			expect(skeleton).toHaveClass("md:h-[292px]", "min-w-0");
+			expect(skeleton).toHaveClass("md:h-[412px]", "min-w-0");
 		}
 	});
 

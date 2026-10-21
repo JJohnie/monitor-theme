@@ -202,13 +202,17 @@ describe("ServerDetailChart", () => {
 		const { container } = renderWithQuery(<ServerDetailChart server_id="7" />);
 
 		const grid = container.querySelector(".grid");
-		expect(grid).toHaveClass("grid-cols-1", "md:grid-cols-2", "gap-3");
-		expect(grid).not.toHaveClass("lg:grid-cols-3");
+		expect(grid).toHaveClass("grid-cols-1", "gap-3");
+		expect(
+			grid?.className
+				.split(/\s+/)
+				.filter((name) => name.includes("grid-cols-")),
+		).toEqual(["grid-cols-1"]);
 		expect(grid?.children).toHaveLength(6);
 		for (const skeleton of Array.from(grid?.children ?? [])) {
 			expect(skeleton).toHaveClass(
-				"h-[252px]",
-				"md:h-[292px]",
+				"h-[312px]",
+				"md:h-[412px]",
 				"w-full",
 				"min-w-0",
 			);
@@ -223,7 +227,7 @@ describe("ServerDetailChart", () => {
 			gpuNames: ["NVIDIA T4", "NVIDIA A10"],
 			chartCount: 8,
 		},
-	])("uses the same enlarged responsive layout $label", async ({
+	])("uses the same single-column large-chart layout $label", async ({
 		gpuNames,
 		chartCount,
 	}) => {
@@ -233,8 +237,12 @@ describe("ServerDetailChart", () => {
 		await screen.findByText("serverDetailChart.realtime");
 
 		const grid = container.querySelector(".server-charts");
-		expect(grid).toHaveClass("grid-cols-1", "md:grid-cols-2", "gap-3");
-		expect(grid).not.toHaveClass("lg:grid-cols-3");
+		expect(grid).toHaveClass("grid-cols-1", "gap-3");
+		expect(
+			grid?.className
+				.split(/\s+/)
+				.filter((name) => name.includes("grid-cols-")),
+		).toEqual(["grid-cols-1"]);
 		expect(grid?.children).toHaveLength(chartCount);
 		for (const card of Array.from(grid?.children ?? [])) {
 			expect(card).toHaveClass("min-w-0");
@@ -245,8 +253,8 @@ describe("ServerDetailChart", () => {
 		for (const chart of charts) {
 			expect(chart).toHaveClass(
 				"aspect-auto",
-				"h-[200px]",
-				"md:h-[240px]",
+				"h-[260px]",
+				"md:h-[360px]",
 				"w-full",
 				"min-w-0",
 			);
@@ -359,7 +367,7 @@ describe("ServerDetailChart", () => {
 		const charts = container.querySelectorAll("[data-chart]");
 		expect(charts).toHaveLength(7);
 		for (const chart of charts) {
-			expect(chart).toHaveClass("h-[200px]", "md:h-[240px]");
+			expect(chart).toHaveClass("h-[260px]", "md:h-[360px]");
 			const placeholder = chart.querySelector(".h-full.w-full");
 			expect(placeholder).toBeInTheDocument();
 			expect(placeholder).toHaveStyle({ width: "100%", height: "100%" });
@@ -384,7 +392,7 @@ describe("ServerDetailChart", () => {
 		expect(screen.getAllByTestId("responsive-chart")).toHaveLength(7);
 		expect(detailChartMocks.fetchServerMetrics).not.toHaveBeenCalled();
 		for (const chart of container.querySelectorAll("[data-chart]")) {
-			expect(chart).toHaveClass("h-[200px]", "md:h-[240px]");
+			expect(chart).toHaveClass("h-[260px]", "md:h-[360px]");
 		}
 	});
 });
