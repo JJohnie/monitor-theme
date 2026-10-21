@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BackIcon } from "../Icon";
 
 const RESOURCE_CHART_SKELETON_CLASS_NAME =
-	"h-[272px] md:h-[352px] w-full min-w-0 rounded-[5px] bg-muted-foreground/10 animate-none";
+	"h-[302px] w-full min-w-0 rounded-[5px] bg-muted-foreground/10 animate-none";
 
 export function ServerDetailChartLoading() {
 	return (
