@@ -14,6 +14,7 @@ dist-ssr
 dev-dist
 coverage
 *.local
+theme.tar.gz
 
 # Editor directories and files
 .vscode/*
